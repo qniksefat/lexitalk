@@ -1,2 +1,5 @@
 .streamlit/secrets.toml
 data/raw/*
+.DS_Store
+data/.DS_Store
+pg.ipynb
