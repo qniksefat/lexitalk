@@ -1,7 +1,26 @@
-from core.config import INPUT_DIR
+from typing import Dict
+import os
 
 from llama_index import SimpleDirectoryReader
 from llama_index.node_parser import SimpleNodeParser
+
+from core.config import INPUT_DIR
+
+
+def metadata_extractor(file_path: str) -> Dict:
+    """Get some handy metadate from filesystem.
+
+    Args:
+        file_path: str: file path in str
+    """
+    file_name = os.path.basename(file_path)
+    return {
+        "file_path": file_path,
+        "file_name": file_name,
+        "file_type": file_name.split(".")[-1],
+        "file_size": os.path.getsize(file_path),
+        "episode_number": int(file_name.split("_")[1])
+    }
 
 
 class EpisodeReader:
@@ -12,7 +31,8 @@ class EpisodeReader:
 
     def load_documents(self):
         """Load data from the specified directory."""
-        reader = SimpleDirectoryReader(input_dir=self.input_dir, recursive=True)
+        reader = SimpleDirectoryReader(input_dir=self.input_dir, 
+                                       file_metadata=metadata_extractor)
         self.docs = reader.load_data()
 
     def fill_documents(self):
