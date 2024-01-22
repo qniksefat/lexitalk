@@ -5,15 +5,18 @@ import openai
 from llama_index.vector_stores import WeaviateVectorStore
 from llama_index import VectorStoreIndex, StorageContext
 
-from core.data_loader import load_nodes
+from core.data_loader import EpisodeReader
 
 
 def build_index(input_dir, index_name):
+
     client = weaviate.Client(
         embedded_options=weaviate.embedded.EmbeddedOptions(),
         additional_headers={'X-OpenAI-Api-Key': st.secrets["openai_key"]})
     
-    nodes = load_nodes(input_dir)
+    reader = EpisodeReader(input_dir=input_dir)
+    reader.load_data()
+    nodes = reader.nodes
 
     vector_store = WeaviateVectorStore(weaviate_client=client, index_name=index_name)
 
