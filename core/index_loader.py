@@ -8,9 +8,12 @@ from llama_index import VectorStoreIndex
 
 def load_vetor_index(index_name):
     openai.api_key = st.secrets["openai_key"]
-
+    
+    auth_client_secret=weaviate.AuthApiKey(api_key=st.secrets["weaviate_key"])
+    
     client = weaviate.Client(
-            embedded_options=weaviate.embedded.EmbeddedOptions(),
+            url=st.secrets["weaviate_url"],
+            auth_client_secret=auth_client_secret,
             additional_headers={'X-OpenAI-Api-Key': st.secrets["openai_key"]})
         
     # construct vector store
