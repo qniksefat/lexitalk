@@ -3,3 +3,4 @@ openai
 llama-index
 weaviate-client
 pandas
+git+https://github.com/weaviate/st-weaviate-connection.git
