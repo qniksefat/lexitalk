@@ -9,10 +9,10 @@ def display_sources(source_nodes) -> None:
             for text_node in source_nodes:
                 sources_df_list.append(
                     {
-                        "ID": text_node.id_,
+                        "Episode Number": text_node.metadata["episode_number"],
+                        "Timestamp": text_node.metadata["timestamp"],
                         "Text": text_node.node.get_content(
-                            metadata_mode=MetadataMode.ALL
-                        ),
+                            metadata_mode=MetadataMode.NONE),
                     }
                 )
             sources_df = pd.DataFrame(sources_df_list)
