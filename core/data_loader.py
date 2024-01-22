@@ -5,11 +5,9 @@ import re
 from llama_index import SimpleDirectoryReader
 from llama_index.node_parser import SimpleNodeParser
 
-from core.config import INPUT_DIR
-
 
 class DatasetReader:
-    def __init__(self, input_dir=INPUT_DIR):
+    def __init__(self, input_dir):
         self.input_dir = input_dir
         self.docs = None
         self.nodes = None
