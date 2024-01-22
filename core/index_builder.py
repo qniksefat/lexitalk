@@ -5,7 +5,7 @@ import openai
 from llama_index.vector_stores import WeaviateVectorStore
 from llama_index import VectorStoreIndex, StorageContext
 
-from core.data_loader import EpisodeReader
+from core.data_loader import DatasetReader
 
 
 def build_index(input_dir, index_name):
@@ -17,7 +17,7 @@ def build_index(input_dir, index_name):
             auth_client_secret=auth_client_secret,
             additional_headers={'X-OpenAI-Api-Key': st.secrets["openai_key"]})
         
-    reader = EpisodeReader(input_dir=input_dir)
+    reader = DatasetReader(input_dir=input_dir)
     reader.load_data()
     nodes = reader.nodes
 

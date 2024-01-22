@@ -1,5 +1,6 @@
 from typing import List, Dict
 import os
+import re
 
 from llama_index import SimpleDirectoryReader
 from llama_index.node_parser import SimpleNodeParser
@@ -30,7 +31,7 @@ class DatasetReader:
         if not self.docs:
             raise ValueError("Documents have not been loaded. Call load_data first.")
         
-        parser = SimpleNodeParser.from_defaults(
+        parser = EpisodeTextSplitter.from_defaults(
             chunk_size=512,
             chunk_overlap=128,
             include_metadata=True,
@@ -59,6 +60,33 @@ class DatasetReader:
             "file_size": os.path.getsize(file_path),
             "episode_number": int(file_name.split("_")[1])
         }
+
+
+class EpisodeTextSplitter(SimpleNodeParser):
+    def _postprocess_chunks(self, chunks: List[str]) -> List[str]:
+        """Post-process chunks for custom requirements."""
+        processed_chunks: List[str] = []
+
+        for chunk in chunks:
+            # Find the first timestamp in the chunk
+            match = re.search(r'\d{1,2}:\d{2}(:\d{2})?\.\d{3}', chunk)
+            first_timestamp = match.group(0) if match else "NA"
+
+            # Remove unnecessary timestamps from the text
+            chunk_without_timestamps = re.sub(r'\d{1,2}:\d{2}(:\d{2})?\.\d{3}', '', chunk)
+
+            # Remove extra new lines
+            cleaned_chunk = ' '.join(line.strip() 
+                                     for line in chunk_without_timestamps.split('\n') 
+                                     if line.strip())
+            cleaned_chunk = cleaned_chunk.replace("-->", "")
+            cleaned_chunk = cleaned_chunk.replace("  ", " ")
+            cleaned_chunk = cleaned_chunk.strip()
+
+            # Append the first timestamp on a new line at the beginning of the chunk
+            cleaned_chunk = f"{first_timestamp}\n{cleaned_chunk}"
+            processed_chunks.append(cleaned_chunk)
+        return processed_chunks
 
 
 if __name__ == "__main__":
