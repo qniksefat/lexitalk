@@ -1,20 +1,25 @@
-from core.config import SYSTEM_PROMPT, INPUT_DIR
+from core.config import INPUT_DIR
 
+from llama_index import SimpleDirectoryReader
+from llama_index.node_parser import SimpleNodeParser
 
-import streamlit as st
-from llama_index import ServiceContext, SimpleDirectoryReader, VectorStoreIndex
-from llama_index.llms import OpenAI
+def load_docs(input_dir=INPUT_DIR):
+    reader = SimpleDirectoryReader(
+        input_dir=input_dir,
+        recursive=True)
+    docs = reader.load_data()
+    return docs
 
+def extract_nodes(docs):
+    parser = SimpleNodeParser.from_defaults(
+        chunk_size=512,
+        include_metadata=True,
+        include_prev_next_rel=True,
+    )
+    nodes = parser.get_nodes_from_documents(docs)
+    return nodes
 
-@st.cache_resource(show_spinner=True)
-def load_vetor_index():
-    with st.spinner(text="Loading and indexing the Streamlit docs – hang tight! This should take a few minutes."):
-        reader = SimpleDirectoryReader(
-            input_dir=INPUT_DIR,
-            recursive=True)
-        docs = reader.load_data()
-        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo",
-                                                                  temperature=0.5,
-                                                                  system_prompt=SYSTEM_PROMPT))
-        index = VectorStoreIndex.from_documents(docs, service_context=service_context)
-        return index
+def load_nodes(input_dir=INPUT_DIR):
+    docs = load_docs(input_dir)
+    nodes = extract_nodes(docs)
+    return nodes
