@@ -2,7 +2,7 @@ import streamlit as st
 import openai
 openai.api_key = st.secrets.openai_key
 
-from core.data_loader import load_vetor_index
+from core.index_loader import load_vetor_index
 from core.st_utils import display_sources
 
 st.set_page_config(page_title="Chat with Lex!", 
@@ -11,16 +11,17 @@ st.set_page_config(page_title="Chat with Lex!",
 st.title("Chat Lexi! 💬")
 st.write("LexiTalk looks into transcripts of conversations in [Lex Fridman Podcast](https://lexfridman.com/podcast), finds relevant viewpoints, and generates a response based on the different perspectives.")
 
-if "messages" not in st.session_state.keys(): # Initialize the chat messages history
+# Initialize the chat messages history
+if "messages" not in st.session_state.keys():
     st.session_state.messages = [
-        {"role": "assistant", "content": "Ask me a question about any topic!"}
+        {"role": "assistant", "content": "Ask me about any topic!"}
     ]
 
-index = load_vetor_index()
+index = load_vetor_index(index_name="Lexi1")
 
 # Initialize the chat engine
 if "chat_engine" not in st.session_state.keys():
-        st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
+    st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
 
 # Prompt for user input and save to chat history
 if prompt := st.chat_input("Your question"):
