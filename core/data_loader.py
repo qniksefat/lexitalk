@@ -36,6 +36,7 @@ class DatasetReader:
             include_prev_next_rel=True,
         )
         self.nodes = parser.get_nodes_from_documents(self.docs)
+        self.nodes = append_timestamp_metadata(self.nodes)
 
     def load_data(self):
         """Load data, fill documents, and fill nodes."""
@@ -85,6 +86,14 @@ class EpisodeTextSplitter(SimpleNodeParser):
             cleaned_chunk = f"{first_timestamp}\n{cleaned_chunk}"
             processed_chunks.append(cleaned_chunk)
         return processed_chunks
+
+
+def append_timestamp_metadata(nodes):
+    """Append timestamp metadata to each node."""
+    for node in nodes:
+        node.metadata["timestamp"]: str = node.text.split("\n")[0]
+        node.text = "\n".join(node.text.split("\n")[1:])
+    return nodes
 
 
 if __name__ == "__main__":
