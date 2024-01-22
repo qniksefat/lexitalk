@@ -5,11 +5,11 @@ openai.api_key = st.secrets.openai_key
 from core.index_loader import load_vetor_index
 from core.st_utils import display_sources
 
-st.set_page_config(page_title="Chat with Lex!", 
+st.set_page_config(page_title="LexiTalk", 
                    page_icon="🎙️", layout="centered", 
                    initial_sidebar_state="auto", menu_items=None)
-st.title("Chat Lexi! 💬")
-st.write("LexiTalk looks into transcripts of conversations in [Lex Fridman Podcast](https://lexfridman.com/podcast), finds relevant viewpoints, and generates a response based on the different perspectives.")
+st.title("Perspectives Unleashed: Chat with Lex Fridman Guests 💬")
+st.write("LexiTalk guides you through [Lex Fridman Podcast](https://lexfridman.com/podcast), unraveling perspectives.")
 
 # Initialize the chat messages history
 if "messages" not in st.session_state.keys():
