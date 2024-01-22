@@ -10,10 +10,13 @@ from core.data_loader import EpisodeReader
 
 def build_index(input_dir, index_name):
 
-    client = weaviate.Client(
-        embedded_options=weaviate.embedded.EmbeddedOptions(),
-        additional_headers={'X-OpenAI-Api-Key': st.secrets["openai_key"]})
+    auth_client_secret=weaviate.AuthApiKey(api_key=st.secrets["weaviate_key"])
     
+    client = weaviate.Client(
+            url=st.secrets["weaviate_url"],
+            auth_client_secret=auth_client_secret,
+            additional_headers={'X-OpenAI-Api-Key': st.secrets["openai_key"]})
+        
     reader = EpisodeReader(input_dir=input_dir)
     reader.load_data()
     nodes = reader.nodes
