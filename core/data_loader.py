@@ -5,6 +5,8 @@ import re
 from llama_index import SimpleDirectoryReader
 from llama_index.node_parser import SimpleNodeParser
 
+from core.metadata import metadata_yt
+
 
 class DatasetReader:
     def __init__(self, input_dir):
@@ -15,14 +17,17 @@ class DatasetReader:
     def load_documents(self):
         """Load data from the specified directory."""
         reader = SimpleDirectoryReader(input_dir=self.input_dir, 
-                                       file_metadata=self.metadata_extractor)
+                                       file_metadata=self.metadata_extractor_from_filename)
         self.docs = reader.load_data()
 
     def fill_documents(self):
         """Fill in the documents attribute."""
         if not self.docs:
             raise ValueError("Documents have not been loaded. Call load_data first.")
+        
         # Your document processing logic goes here
+        for doc in self.docs:
+            self.append_metadata_doc_yt_info(doc)
 
     def fill_nodes(self):
         """Fill in the nodes attribute."""
@@ -36,7 +41,7 @@ class DatasetReader:
             include_prev_next_rel=True,
         )
         self.nodes = parser.get_nodes_from_documents(self.docs)
-        self.nodes = append_timestamp_metadata(self.nodes)
+        self.nodes = append_metadata_nodes_timestamps(self.nodes)
 
     def load_data(self):
         """Load data, fill documents, and fill nodes."""
@@ -45,7 +50,7 @@ class DatasetReader:
         self.fill_nodes()
     
     @staticmethod
-    def metadata_extractor(file_path: str) -> Dict:
+    def metadata_extractor_from_filename(file_path: str) -> Dict:
         """Get some handy metadate from filesystem.
 
         Args:
@@ -59,6 +64,12 @@ class DatasetReader:
             "file_size": os.path.getsize(file_path),
             "episode_number": int(file_name.split("_")[1])
         }
+        
+    def append_metadata_doc_yt_info(self, doc):
+        """Append metadata from youtube info dataframe to the document."""
+        # for every column in the dataframe, append the value to the document.metadata
+        for column in metadata_yt.columns:
+            doc.metadata[column] = metadata_yt.loc[doc.metadata["episode_number"], column]
 
 
 class EpisodeTextSplitter(SimpleNodeParser):
@@ -88,7 +99,7 @@ class EpisodeTextSplitter(SimpleNodeParser):
         return processed_chunks
 
 
-def append_timestamp_metadata(nodes):
+def append_metadata_nodes_timestamps(nodes):
     """Append timestamp metadata to each node."""
     for node in nodes:
         node.metadata["timestamp"]: str = node.text.split("\n")[0]
