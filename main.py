@@ -6,7 +6,7 @@ from core.index_loader import load_vetor_index
 from core.st_utils import display_sources
 
 st.set_page_config(page_title="LexiTalk", 
-                   page_icon="🎙️", layout="centered", 
+                   page_icon="🎙️", layout="wide", 
                    initial_sidebar_state="auto", menu_items=None)
 st.title("Perspectives Unleashed: Chat with Lex Fridman Guests 💬")
 st.write("LexiTalk guides you through [Lex Fridman Podcast](https://lexfridman.com/podcast), unraveling perspectives.")
