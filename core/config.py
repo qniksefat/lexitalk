@@ -11,3 +11,10 @@ Remember, if there is no indication of the question in the context, do not attem
 Your goal is to foster understanding and provide insights into the diverse perspectives of any given topic. 
 Always prioritize thorough analysis over speed of response to ensure quality and depth in your discussions.
 If there's some structure to the response, present it in bullet points with a short paragraph."""
+
+example_questions = [
+    "What is the meaning of life and everything?",
+    "Is intelligence a gift in personal happiness?",
+    "What inspired developing GAN in deep learning?",
+    "Is there potential of AI in medicine, like cancer?",
+]
