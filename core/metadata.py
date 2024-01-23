@@ -13,8 +13,10 @@ class MetadataSingleton:
     def _generate_dataframe(self):
         df = pd.read_csv("data/youtube_playlist/videos.csv")
         df["guest_names"] = df["title"].apply(self._extract_guest_names)
-        df["episode_number"] = df["title"].apply(self._extract_episode_number)
         df["episode_title"] = df["title"].apply(self._extract_episode_title)
+        df["views"] = df["views"].astype(str)
+        df["length"] = df["length"].astype(str)
+        df["episode_number"] = df["title"].apply(self._extract_episode_number)
         df = df.set_index("episode_number")
         self.metadata_yt = df
 
@@ -27,7 +29,7 @@ class MetadataSingleton:
     def _extract_episode_number(self, title):
         # "Ask Me Anything (AMA)" episodes have "#" but not conventional episode numbers
         if "AMA" not in title and "#" in title:
-            return int(title.split("#")[1])
+            return str(int(title.split("#")[1]))    # remove leading zeros
         else:
             return None
 
