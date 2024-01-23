@@ -61,8 +61,9 @@ class DatasetReader:
             "file_path": file_path,
             "file_name": file_name,
             "file_type": file_name.split(".")[-1],
-            "file_size": os.path.getsize(file_path),
-            "episode_number": int(file_name.split("_")[1])
+            "file_size": str(os.path.getsize(file_path)),
+            # this will remove leading zeros from the episode number
+            "episode_number": str(int(file_name.split("_")[1]))
         }
         
     def append_metadata_doc_yt_info(self, doc):
