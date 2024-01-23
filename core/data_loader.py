@@ -25,8 +25,10 @@ class DatasetReader:
         if not self.docs:
             raise ValueError("Documents have not been loaded. Call load_data first.")
         
-        # Your document processing logic goes here
+        # Your document processing logic goes here        
         for doc in self.docs:
+            if doc.text.startswith("WEBVTT"):
+                doc.text = doc.text[len("WEBVTT"):]
             self.append_metadata_doc_yt_info(doc)
 
     def fill_nodes(self):
