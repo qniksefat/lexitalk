@@ -17,7 +17,7 @@ if "messages" not in st.session_state.keys():
         {"role": "assistant", "content": "Ask me about any topic!"}
     ]
 
-index = load_vetor_index(index_name="Lexi1")
+index = load_vetor_index(index_name=st.secrets["weaviate_index_name"])
 
 # Initialize the chat engine
 if "chat_engine" not in st.session_state.keys():
