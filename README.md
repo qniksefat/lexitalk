@@ -1,7 +1,7 @@
 # LexiTalk
 
 
-<img src="data/lexitalk-logo.png" alt="Logo" align="middle" width="100">
+<img src="data/lexitalk-logo.png" alt="Logo" align="middle" width="30%">
 
 
 LexiTalk is a chatbot designed to guide you through discussions and analyze various perspectives from conversation transcripts of the Lex Fridman Podcast [(link)](https://lexfridman.com/podcast). It shows the moments where a topic is discussed and helps you watch it from that time stamp. The chatbot aims to provide balanced responses by considering all sides of an argument. The project is built using Python and integrates with Streamlit for the web interface, Weaviate for vector search, and OpenAI for natural language processing.
@@ -15,7 +15,7 @@ This chatbot searches through thousands of hours of talks with brilliant minds. 
 
 You can quickly start using the chatbot by visiting the [lexitalk.streamlit.app](https://lexitalk.streamlit.app) website. The chatbot will be available for interaction, and you can ask your questions.
 
-<img src="data/video-screen.gif" width="400" alt="Video Screen of the App">
+<img src="data/video-screen.gif" width="85%" alt="Video Screen of the App">
 
 ## Usage
 
