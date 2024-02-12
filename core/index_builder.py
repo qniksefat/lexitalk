@@ -1,55 +1,55 @@
-import weaviate
-import streamlit as st
-import openai
+from tqdm import tqdm
 
-from llama_index.vector_stores import WeaviateVectorStore
-from llama_index import VectorStoreIndex, StorageContext
+from llama_index.schema import MetadataMode
+from llama_index.vector_stores.utils import node_to_metadata_dict
 
 from core.data_loader import DatasetReader
+from core.embedding import load_or_generate_embeddings
+from core.utils import hash_node
 
 
-def build_index(input_dir, index_name):
-    weaviate_client = build_weaviate_client()
-        
+def build_index(input_dir, 
+                mongodb_client, 
+                openai_client, 
+                index_name="vector_index",
+                remove_text=True    # Already saving text in node_content along with metadata
+                ):
     reader = DatasetReader(input_dir=input_dir)
     reader.load_data()
 
-    vector_store = WeaviateVectorStore(weaviate_client=weaviate_client, 
-                                       index_name=index_name)
-    
-    # setting up the storage for the embeddings
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
-    
-    index = VectorStoreIndex(reader.nodes, 
-                             storage_context=storage_context)
-    
-    return index
+    hash_embeddings = load_or_generate_embeddings(reader.nodes, openai_client)
+
+    data_to_insert = []
+    for node in tqdm(reader.nodes, desc="Pre-processing text nodes for MongoDB"):
+        metadata = node_to_metadata_dict(node, remove_text=remove_text, flat_metadata=True)
+        node_hash = hash_node(node)
+        node_embedding = hash_embeddings[node_hash]
+        entry = {
+            "id": node.node_id,
+            "metadata": metadata,
+            "embedding": node_embedding,
+            "hash": node_hash,
+        }
+        
+        if not remove_text:
+            text = node.get_content(metadata_mode=MetadataMode.NONE) or ""
+            entry["text"] = text
+        
+        data_to_insert.append(entry)
+
+    mongodb_client.insert_many(data_to_insert)
 
 
-def build_weaviate_client():
-    
-    # maybe openai should be before storage_context?
-    openai.api_key = st.secrets["openai_key"]
+if __name__ == "__main__":
+    from core.database import MongoDBClient
+    from core.embedding import OpenAIClient
 
-    auth_client_secret=weaviate.AuthApiKey(api_key=st.secrets["weaviate_key"])
-    
-    client = weaviate.Client(
-            url=st.secrets["weaviate_url"],
-            auth_client_secret=auth_client_secret,
-            additional_headers={'X-OpenAI-Api-Key': st.secrets["openai_key"]})
-            
-    return client
+    mongodb_client = MongoDBClient(database_name='default_db',
+                                   collection_name='default_collection',
+                                   index_name="vector_index")
 
+    openai_client = OpenAIClient()
 
-def show_weaviate_schema(client):
-    """This will show a list of classes/indexes in the weaviate instance."""
-    import json
-    
-    schema = client.schema.get()
-    print(json.dumps(schema, indent=2))
-
-
-def delete_weaviate_index(client, index_name):
-    """This will delete a class/index in the weaviate instance."""
-    client.schema.delete_class(index_name)
-    print(f"Deleted index {index_name}.")
+    build_index(input_dir="data/raw/sample",
+                mongodb_client=mongodb_client,
+                openai_client=openai_client)
