@@ -31,7 +31,7 @@ st.info("Welcome aboard our AI-driven magic carpet! Journey through the fascinat
         " sources of truth. No reading required—just click and listen from the moment of discussion!",
         icon="💡")
 
-index = load_vetor_index(index_name=st.secrets["weaviate_index_name"])
+index = load_vetor_index(index_name=st.secrets["mongodb_index_name"])
 
 # Initialize the chat engine
 if "chat_engine" not in st.session_state:
