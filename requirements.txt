@@ -1,5 +1,0 @@
-streamlit
-openai
-llama-index
-weaviate-client
-pandas
