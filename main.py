@@ -1,4 +1,17 @@
 import streamlit as st
+import openai
+
+from core.st_utils import (
+    input_user_question, 
+    display_chat_messages, 
+    generate_assistant_response,
+    initialize_chat_messages,
+    make_sample_question_buttons,
+)
+from core.index_loader import load_vetor_index
+# add cohere rerank
+
+openai.api_key = st.secrets.openai_key
 
 st.set_page_config(
     page_title="LexChat",
@@ -19,48 +32,23 @@ st.info("Welcome aboard our AI-driven magic carpet! Journey through the fascinat
         " sources of truth. No reading required—just click and listen from the moment of discussion!",
         icon="💡")
 
+index = load_vetor_index(index_name=st.secrets["mongodb_index_name"])
 
-import requests
+# Initialize the chat engine
+if "chat_engine" not in st.session_state:
+    st.session_state.chat_engine = index.as_chat_engine(
+        similarity_top_k=5,
+        chat_mode="condense_question",
+        verbose=True
+    )
 
-def get_public_ip():
-    try:
-        response = requests.get('https://api.ipify.org')
-        if response.status_code == 200:
-            return response.text
-        else:
-            return "Failed to retrieve public IP"
-    except requests.RequestException as e:
-        return "Error: " + str(e)
+initialize_chat_messages()
+st.write("\n")
+make_sample_question_buttons()
+input_user_question()
+display_chat_messages(st.session_state.messages)
 
-public_ip = get_public_ip()
-st.write("my public IP address is:", public_ip)
-
-
-username = "qniksefat"
-password = st.secrets["mongodb_password"]
-url = st.secrets["mongodb_url"]
-from pymongo import MongoClient
-from pymongo.server_api import ServerApi
-
-
-class MongoDBClient:
-    def __init__(self, connection_uri, database_name, collection_name):
-        self.client = MongoClient(connection_uri, server_api=ServerApi('1'))
-        self.db = self.client[database_name]
-        self.collection = self.db[collection_name]
-
-    def ping_connection(self):
-        try:
-            self.client.admin.command('ping')
-            print("Pinged your deployment. You successfully connected to MongoDB!")
-        except Exception as e:
-            print(e)
-
-connection_uri = (f"mongodb+srv://{username}:{password}@{url}/?retryWrites=true&w=majority")
-monngodb_client = MongoDBClient(connection_uri, 
-                             database_name = 'default_db',
-                             collection_name = 'default_collection')
-
-st.write(
-    monngodb_client.collection.find_one()
-)
+# If the last message is not from the assistant, generate a new response
+if st.session_state.messages[-1]["role"] != "assistant":
+    generate_assistant_response(
+        st.session_state.chat_engine, st.session_state.messages[-1]["content"])
