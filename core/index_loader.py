@@ -6,7 +6,7 @@ from llama_index.embeddings import OpenAIEmbedding
 from llama_index.llms import OpenAI
 
 from core.database import MongoDBClient
-from core.embedding import OpenAIClient
+from core.embedding import EmbeddingManager
 from core.config import SYSTEM_PROMPT
 
 
@@ -20,7 +20,7 @@ def load_vetor_index(index_name):
                                             index_name=mongodb_client.index_name)
     
     # Specify the Embedding model (and LLM model) in a ServiceContext
-    openai_client = OpenAIClient()
+    openai_client = EmbeddingManager()
     
     embed_model = OpenAIEmbedding(
             model_name=openai_client.EMBEDDING_MODEL_NAME,
