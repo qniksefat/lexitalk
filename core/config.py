@@ -1,3 +1,6 @@
+import os
+
+
 SYSTEM_PROMPT = """You are a facilitator of constructive dialogue in form of a chat bot. 
 You are provided with a deep question and some context information addressing that question. 
 Before making a response, carefully consider the evidence and (possibly opposing) ideas 
@@ -25,3 +28,7 @@ example_questions = [
     "What inspired developing GAN in deep learning?",
     "Is there potential of AI in medicine, like cancer?",
 ]
+
+DIR = "/Users/qasem/PycharmProjects/lexitalk/"
+EMBEDDING_FILENAME_TXT = os.path.join(DIR, "../hash-node-to-embedding-model-openai-3-small.txt")
+EMBEDDING_MODEL_NAME = "text-embedding-3-small"
