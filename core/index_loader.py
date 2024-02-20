@@ -1,23 +1,38 @@
-import weaviate
 import streamlit as st
-import openai 
 
-from llama_index.vector_stores import WeaviateVectorStore
-from llama_index import VectorStoreIndex
+from llama_index import ServiceContext, VectorStoreIndex
+from llama_index.vector_stores import MongoDBAtlasVectorSearch
+from llama_index.embeddings import OpenAIEmbedding
+from llama_index.llms import OpenAI
+
+from core.database import MongoDBClient
+from core.embedding import EmbeddingManager
+from core.config import SYSTEM_PROMPT
 
 
 def load_vetor_index(index_name):
-    openai.api_key = st.secrets["openai_key"]
+    mongodb_client = MongoDBClient(database_name='default_db',
+                                   collection_name='default_collection',
+                                   index_name=index_name)
     
-    auth_client_secret=weaviate.AuthApiKey(api_key=st.secrets["weaviate_key"])
-    
-    client = weaviate.Client(
-            url=st.secrets["weaviate_url"],
-            auth_client_secret=auth_client_secret,
-            additional_headers={'X-OpenAI-Api-Key': st.secrets["openai_key"]})
-        
     # construct vector store
-    vector_store = WeaviateVectorStore(weaviate_client=client, index_name=index_name)
+    vector_store = MongoDBAtlasVectorSearch(mongodb_client=mongodb_client.client, 
+                                            index_name=mongodb_client.index_name)
+    
+    # Specify the Embedding model (and LLM model) in a ServiceContext
+    embedding_manager = EmbeddingManager()
+    
+    embed_model = OpenAIEmbedding(
+            model_name=embedding_manager.embedding_model_name,
+            api_key=st.secrets["openai_key"])
+    
+    llm = OpenAI(model="gpt-3.5-turbo",
+             system_prompt=SYSTEM_PROMPT,
+             api_key=st.secrets["openai_key"])
 
-    loaded_index = VectorStoreIndex.from_vector_store(vector_store)
+    service_context = ServiceContext.from_defaults(llm=llm, embed_model=embed_model)
+
+    loaded_index = VectorStoreIndex.from_vector_store(vector_store=vector_store,
+                                                      service_context=service_context)
+
     return loaded_index

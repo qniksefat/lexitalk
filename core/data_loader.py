@@ -112,7 +112,7 @@ def append_metadata_nodes_timestamps(nodes):
 
 if __name__ == "__main__":
     # Example of using EpisodeReader
-    episode_reader = DatasetReader()
+    episode_reader = DatasetReader("data/raw/sample/")
     episode_reader.load_data()
 
     # Access documents and nodes attributes if needed

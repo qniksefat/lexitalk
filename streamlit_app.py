@@ -27,7 +27,7 @@ st.set_page_config(
 
 st.title("Chat with Lex Fridman's Guests 💬")
 
-st.success("Welcome aboard our AI-driven magic carpet! Journey through the fascinating depths"
+st.info("Welcome aboard our AI-driven magic carpet! Journey through the fascinating depths"
         " of minds from Lex Fridman Podcast [(link)](https://lexfridman.com/podcast). Decide YOUR"
         " sources of truth. No reading required—just click and listen from the moment of discussion!",
         icon="💡")
