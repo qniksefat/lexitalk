@@ -20,10 +20,10 @@ def load_vetor_index(index_name):
                                             index_name=mongodb_client.index_name)
     
     # Specify the Embedding model (and LLM model) in a ServiceContext
-    openai_client = EmbeddingManager()
+    embedding_manager = EmbeddingManager()
     
     embed_model = OpenAIEmbedding(
-            model_name=openai_client.EMBEDDING_MODEL_NAME,
+            model_name=embedding_manager.embedding_model_name,
             api_key=st.secrets["openai_key"])
     
     llm = OpenAI(model="gpt-3.5-turbo",
