@@ -13,7 +13,8 @@ def prepare_data_and_embeddings(
                 embedding_manager: EmbeddingManager,
                 input_dir=None,
                 text_nodes=None,
-                remove_text=True,
+                remove_text_in_metadata=True,
+                remove_text_in_fields=False,
                 ):
     """Prepares the data for insertion into the MongoDB collection.
     
@@ -21,8 +22,6 @@ def prepare_data_and_embeddings(
     Otherwise, it will use the input_dir to read the data.
     
     Generates or loads the embeddings for the text nodes.
-    
-    Already keeping text in node content, so remove_text=True by default.
     """
     assert (text_nodes is None) != (input_dir is None), "Either specify text_nodes or input_dir, not both"
     if text_nodes is None:
@@ -34,7 +33,7 @@ def prepare_data_and_embeddings(
 
     data_to_insert = []
     for node in tqdm(text_nodes, desc="Pre-processing text nodes for MongoDB"):
-        metadata = node_to_metadata_dict(node, remove_text=remove_text, flat_metadata=True)
+        metadata = node_to_metadata_dict(node, remove_text=remove_text_in_metadata, flat_metadata=True)
         node_hash = hash_node(node)
         node_embedding = hash_embeddings[node_hash]
         entry = {
@@ -43,7 +42,7 @@ def prepare_data_and_embeddings(
             "embedding": node_embedding,
             "hash": node_hash,
         }
-        if not remove_text:
+        if not remove_text_in_fields:
             text = node.get_content(metadata_mode=MetadataMode.NONE) or ""
             entry["text"] = text
         
