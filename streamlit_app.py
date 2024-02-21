@@ -1,5 +1,4 @@
 import streamlit as st
-import openai
 
 from core.st_utils import (
     input_user_question, 
@@ -8,20 +7,17 @@ from core.st_utils import (
     initialize_chat_messages,
     make_sample_question_buttons,
 )
-from core.index_loader import load_vetor_index
-# add cohere rerank
-
-openai.api_key = st.secrets.openai_key
+from core.index_loader import build_chat_engine
 
 st.set_page_config(
-    page_title="LexChat",
+    page_title="LexChat 💦 💬",
     page_icon="🎙️",
     layout="wide",
     initial_sidebar_state="auto",
     menu_items={
-        "About": ("LexiTalk guides you through [Lex Fridman Podcast](https://lexfridman.com/podcast) "
-                  "first 325 episodes taking transcripts from [here](https://karpathy.ai/lexicap/) unraveling perspectives.")
-
+        "About": "This is a Streamlit app for conversing with Lex Fridman's guests.",
+        "Report a bug": "https://github.com/qniksefat/lexitalk/issues/new",
+        "Get help": "https://github.com/qniksefat/lexitalk/",
     },
 )
 
@@ -32,15 +28,9 @@ st.info("Welcome aboard our AI-driven magic carpet! Journey through the fascinat
         " sources of truth. No reading required—just click and listen from the moment of discussion!",
         icon="💡")
 
-index = load_vetor_index(index_name=st.secrets["mongodb_index_name"])
-
 # Initialize the chat engine
 if "chat_engine" not in st.session_state:
-    st.session_state.chat_engine = index.as_chat_engine(
-        similarity_top_k=10,
-        chat_mode="condense_question",
-        verbose=True
-    )
+    st.session_state.chat_engine = build_chat_engine()
 
 initialize_chat_messages()
 st.write("\n")
