@@ -4,6 +4,7 @@ from llama_index import ServiceContext, VectorStoreIndex
 from llama_index.vector_stores import MongoDBAtlasVectorSearch
 from llama_index.embeddings import OpenAIEmbedding
 from llama_index.llms import OpenAI
+from llama_index.postprocessor.cohere_rerank import CohereRerank
 
 from core.database import MongoDBClient
 from core.embedding import EmbeddingManager
@@ -36,3 +37,16 @@ def load_vetor_index(index_name):
                                                       service_context=service_context)
 
     return loaded_index
+
+
+index = load_vetor_index(index_name=st.secrets["mongodb_index_name"])
+
+
+def build_chat_engine(index=index):
+    cohere_rerank = CohereRerank(api_key=st.secrets["cohere_key"], top_n=8)
+    return index.as_chat_engine(
+        similarity_top_k=20,
+        node_postprocessors=[cohere_rerank],
+        chat_mode="condense_question",
+        verbose=True,
+    )
