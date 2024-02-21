@@ -4,7 +4,7 @@ from llama_index.schema import MetadataMode, NodeWithScore
 from typing import List
 from datetime import datetime, timedelta
 
-from core.config import example_questions
+from core.config import example_questions, welcome_messages
 
 
 def generate_sources_df(
@@ -108,6 +108,10 @@ def convert_timestamp_str_to_seconds(timestamp_str: str) -> int:
     return int(seconds)
 
 
+def st_welcome():
+    for message in welcome_messages:
+        st.write(message)
+
 def make_sample_question_buttons():
     left_col, mid_col, _ = st.columns([1, 4, 1])
     left_col.markdown("**Example Questions:**")
@@ -143,6 +147,7 @@ def generate_assistant_response(chat_engine, prompt):
                 display_videos(df_sources)
                 with st.expander("Extra Info 📚"):
                     st.dataframe(df_sources)
+                st.warning("If you want to change the topic, consider refreshing the page.")
             
             message = {"role": "assistant", "content": response.response}
             st.session_state.messages.append(message)

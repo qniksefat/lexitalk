@@ -29,6 +29,12 @@ example_questions = [
     "Is there potential of AI in medicine, like cancer?",
 ]
 
+welcome_messages = [
+    ("Welcome aboard our AI-driven magic carpet! Journey through the fascinating depths"
+     " of minds from Lex Fridman Podcast [(link)](https://lexfridman.com/podcast)."),
+    "Decide YOUR sources of truth. No reading required—just click and listen from the moment of discussion!",
+]
+
 DIR = "/Users/qasem/PycharmProjects/lexitalk/"
 EMBEDDING_FILENAME_TXT = os.path.join(DIR, "../hash-node-to-embedding-model-openai-3-small.txt")
 EMBEDDING_MODEL_NAME = "text-embedding-3-small"
