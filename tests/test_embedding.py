@@ -1,8 +1,9 @@
+import os
 import sys
 sys.path.append('/Users/qasem/PycharmProjects/lexitalk/')
 
 import unittest
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import MagicMock
 
 from core.embedding import EmbeddingManager
 
@@ -49,6 +50,8 @@ class TestEmbeddingManager(unittest.TestCase):
         # Read the content of the mock file
         with open("test_embedding_file.txt", "r") as f:
             content = f.read()
+        
+        os.remove("test_embedding_file.txt")
 
         self.assertEqual(content, "test_hash: 0.1, 0.2, 0.3\n")
 
