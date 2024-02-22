@@ -5,7 +5,11 @@ from pymongo.errors import BulkWriteError
 
 
 class MongoDBClient:
-    def __init__(self, database_name, collection_name, index_name):
+    def __init__(self, 
+                 database_name=st.secrets["mongodb_database_name"],
+                 collection_name=st.secrets["mongodb_collection_name"],
+                 index_name=st.secrets["mongodb_index_name"],
+                 ):
         self.index_name = index_name
         self.client = MongoClient(self.get_connection_uri(), server_api=ServerApi('1'))
         self.db = self.client[database_name]
