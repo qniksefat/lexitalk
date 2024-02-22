@@ -1,5 +1,10 @@
 import os
 
+DIR = "/Users/qasem/PycharmProjects/lexitalk/"
+EMBEDDING_FILENAME_TXT = os.path.join(DIR, "../hash-node-to-embedding-model-openai-3-small.txt")
+
+EMBEDDING_MODEL_NAME = "text-embedding-3-small"     # OpenAI's embedding model
+
 
 SYSTEM_PROMPT = """You are a facilitator of constructive dialogue in form of a chat bot. 
 You are provided with a deep question and some context information addressing that question. 
@@ -21,20 +26,3 @@ anecdotes, or vivid descriptions to make your argument more relatable and engagi
 Use transition words. Use clear and concise language, avoiding jargon or overly complex 
 vocabulary. Keep sentences and paragraphs short and straightforward. Provide a short 
 conclusion."""
-
-example_questions = [
-    "What is the meaning of life and everything?",
-    "Is intelligence a gift in personal happiness?",
-    "What inspired developing GAN in deep learning?",
-    "Is there potential of AI in medicine, like cancer?",
-]
-
-welcome_messages = [
-    ("Welcome aboard our AI-driven magic carpet! Journey through the fascinating depths"
-     " of minds from Lex Fridman Podcast [(link)](https://lexfridman.com/podcast)."),
-    "Decide YOUR sources of truth. No reading required—just click and listen from the moment of discussion!",
-]
-
-DIR = "/Users/qasem/PycharmProjects/lexitalk/"
-EMBEDDING_FILENAME_TXT = os.path.join(DIR, "../hash-node-to-embedding-model-openai-3-small.txt")
-EMBEDDING_MODEL_NAME = "text-embedding-3-small"
