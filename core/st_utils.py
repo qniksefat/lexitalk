@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
-from llama_index.schema import MetadataMode, NodeWithScore
 from typing import List
-from datetime import datetime, timedelta
 
-from core.config import example_questions, welcome_messages
+from llama_index.schema import MetadataMode, NodeWithScore
+
+from core.st_config import example_questions, welcome_messages
+from core.utils import convert_timestamp_str_to_seconds, parse_timestamp
 
 
 def generate_sources_df(
@@ -75,44 +76,11 @@ def display_videos(df_sources: pd.DataFrame):
         return None
 
 
-def parse_timestamp(timestamp_str: str) -> datetime:
-    """Parses a timestamp string with or without milliseconds or hours into a datetime object.
-    """
-    if "." in timestamp_str:
-        # Has milliseconds in the end
-        if len(timestamp_str.split(":")) == 3:
-            # Has hours in the beginning
-            timestamp = datetime.strptime(timestamp_str, '%H:%M:%S.%f')
-        else:
-            timestamp = datetime.strptime(timestamp_str, '%M:%S.%f')
-    else:
-        if len(timestamp_str.split(":")) == 3:
-            timestamp = datetime.strptime(timestamp_str, '%H:%M:%S')
-        else:
-            timestamp = datetime.strptime(timestamp_str, '%M:%S')
-    return timestamp.time()     # No date is in the range of of a video
-
-
-def convert_timestamp_str_to_seconds(timestamp_str: str) -> int:
-    """Converts a timestamp string to number of total seconds.
-    
-    Returns:
-        int: Number of seconds.
-    """
-    timestamp = parse_timestamp(timestamp_str)
-    seconds = timedelta(
-        hours=timestamp.hour, 
-        minutes=timestamp.minute,
-        seconds=timestamp.second,
-        microseconds=timestamp.microsecond).total_seconds()
-    return int(seconds)
-
-
 def st_welcome():
     for message in welcome_messages:
         st.write(message)
 
-def make_sample_question_buttons():
+def st_example_question_buttons():
     left_col, mid_col, _ = st.columns([1, 4, 1])
     left_col.markdown("**Example Questions:**")
     cols = mid_col.columns(len(example_questions))
@@ -132,22 +100,22 @@ def display_chat_messages(messages):
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
-def generate_assistant_response(chat_engine, prompt):
+def st_response(chat_engine, prompt):
     with st.chat_message("assistant"):
         with st.spinner("This may take a few seconds..."):
             response = chat_engine.chat(prompt)
             st.write(response.response)
-            
-            sorted_source_nodes = response.source_nodes
 
-            if sorted_source_nodes:
+            if response.source_nodes:
                 st.info(("Click on the links if video is disabled to show outside of"
                          " YouTube, or it doesn't play from the right time."), icon="🎥")
-                df_sources = generate_sources_df(sorted_source_nodes)
+                df_sources = generate_sources_df(response.source_nodes)
+                
                 display_videos(df_sources)
                 with st.expander("Extra Info 📚"):
                     st.dataframe(df_sources)
-                st.warning("If you want to change the topic, consider refreshing the page.")
+                
+            st.warning("If you want to change the topic, consider refreshing the page.")
             
             message = {"role": "assistant", "content": response.response}
             st.session_state.messages.append(message)
