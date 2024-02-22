@@ -120,8 +120,12 @@ def st_response(chat_engine, prompt):
             message = {"role": "assistant", "content": response.response}
             st.session_state.messages.append(message)
 
-def initialize_chat_messages():
+def st_initialize_chat_messages():
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [
             {"role": "assistant", "content": "Ask me about any topic!"}
         ]
+
+def st_initialize_chat_engine(chat_engine):
+    if "chat_engine" not in st.session_state:
+        st.session_state.chat_engine = chat_engine
