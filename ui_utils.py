@@ -25,11 +25,7 @@ example_questions = [
 
 class View(ABC):
     @abstractmethod
-    def display_welcome(self):
-        pass
-    
-    @abstractmethod
-    def display_example_question_buttons(self, example_questions):
+    def init_view(self):
         pass
     
     @abstractmethod
@@ -41,15 +37,15 @@ class View(ABC):
         pass
     
     @abstractmethod
-    def display_response(self, response, source_nodes):
-        pass
-    
-    @abstractmethod
-    def initialize_chat_messages(self):
+    def display_response(self, response):
         pass
 
 
 class Controller(ABC):
+    def __init__(self, view, chat_engine):
+        self.view = view
+        self.chat_engine = chat_engine
+    
     @abstractmethod
     def run(self):
         pass
@@ -84,7 +80,7 @@ def parse_timestamp(timestamp_str: str) -> datetime:
             timestamp = datetime.strptime(timestamp_str, '%M:%S')
     return timestamp.time()     # No date is in the range of of a video
 
-def convert_timestamp_str_to_seconds(timestamp_str: str) -> int:
+def convert_timestamp_seconds(timestamp_str: str) -> int:
     """Converts a timestamp string to number of total seconds.
 
     Returns:
@@ -99,7 +95,7 @@ def convert_timestamp_str_to_seconds(timestamp_str: str) -> int:
     return int(seconds)
 
 
-def generate_sources_df(
+def nodes_to_sorted_dataframe(
     source_nodes: List[NodeWithScore]) -> pd.DataFrame:
     """
     Generate a pandas DataFrame from a list of source nodes.
