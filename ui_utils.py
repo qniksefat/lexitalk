@@ -20,6 +20,8 @@ example_questions = [
     "Is there potential of AI in medicine, like cancer?",
 ]
 
+MAX_MESSAGE_LENGTH = 1000
+
 
 # UI abstract classes
 
@@ -49,10 +51,14 @@ class Controller(ABC):
     @abstractmethod
     def run(self):
         pass
-
-    @abstractmethod
+    
     def process_user_input(self, user_input):
-        pass
+        
+        if len(user_input) > MAX_MESSAGE_LENGTH:
+            raise ValueError(f"Message length exceeds {MAX_MESSAGE_LENGTH} characters.")
+                
+        response = self.get_chat_engine().chat(user_input)
+        return response
 
 
 # UI helper functions

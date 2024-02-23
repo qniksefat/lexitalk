@@ -145,11 +145,7 @@ class StreamlitController(Controller):
                     user_input = st.session_state.messages[-1]["content"]
                     response = self.process_user_input(user_input)
                     self.view.display_response(response)
-
-    def process_user_input(self, user_input):
-        response = self.get_chat_engine().chat(user_input)
-        return response
-    
+        
     def init_chat_engine(self):
         if "chat_engine" not in st.session_state.keys():
             st.session_state.chat_engine = self.chat_engine
