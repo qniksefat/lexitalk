@@ -105,7 +105,7 @@ class EpisodeTextSplitter(SimpleNodeParser):
 def append_metadata_nodes_timestamps(nodes):
     """Append timestamp metadata to each node."""
     for node in nodes:
-        node.metadata["timestamp"]: str = node.text.split("\n")[0]
+        node.metadata["timestamp"] = node.text.split("\n")[0]
         node.text = "\n".join(node.text.split("\n")[1:])
     return nodes
 
