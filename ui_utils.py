@@ -11,7 +11,6 @@ from llama_index.schema import MetadataMode, NodeWithScore
 welcome_messages = [
     ("Welcome aboard our AI-driven magic carpet! Journey through the fascinating depths"
      " of minds from Lex Fridman Podcast [(link)](https://lexfridman.com/podcast)."),
-    "Decide YOUR sources of truth. No reading required—just click and listen from the moment of discussion!",
 ]
 example_questions = [
     "What is the meaning of life and everything?",
@@ -35,10 +34,6 @@ class View(ABC):
         pass
     
     @abstractmethod
-    def display_chat_messages(self, messages):
-        pass
-    
-    @abstractmethod
     def display_response(self, response):
         pass
 
@@ -57,7 +52,7 @@ class Controller(ABC):
         if len(user_input) > MAX_MESSAGE_LENGTH:
             raise ValueError(f"Message length exceeds {MAX_MESSAGE_LENGTH} characters.")
                 
-        response = self.get_chat_engine().stream_chat(user_input)
+        response = self.chat_engine.stream_chat(user_input)
         return response
 
 
