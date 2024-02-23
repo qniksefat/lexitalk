@@ -57,7 +57,7 @@ class Controller(ABC):
         if len(user_input) > MAX_MESSAGE_LENGTH:
             raise ValueError(f"Message length exceeds {MAX_MESSAGE_LENGTH} characters.")
                 
-        response = self.get_chat_engine().chat(user_input)
+        response = self.get_chat_engine().stream_chat(user_input)
         return response
 
 

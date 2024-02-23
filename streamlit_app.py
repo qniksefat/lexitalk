@@ -1,5 +1,9 @@
 import streamlit as st
 
+# To stream the responses in Streamlit, we need to use nest_asyncio
+import nest_asyncio
+nest_asyncio.apply()
+
 from core import build_chat_engine
 
 from ui_utils import (
@@ -66,8 +70,11 @@ class StreamlitView(View):
                     st.session_state.messages.append({"role": "user", "content": question})
     
     
-    def _st_display_response(self, response):
-        st.write(response.response)
+    def _st_display_response(self, response, streaming=True):
+        if streaming:
+            st.write_stream(response.response_gen)
+        else:
+            st.write(response.response)
 
         if response.source_nodes:
             st.info(("Click on the links if video is disabled to show outside of"
