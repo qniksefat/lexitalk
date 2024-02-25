@@ -14,7 +14,7 @@ class CLIView(View):
     def input_user_question(self):
         return input("\nYou: ")
 
-    def display_response(self, response):
+    def display_response_and_sources(self, response):
         print("\nAssistant: ", end="")
         response.print_response_stream()
         print("\n")
@@ -42,7 +42,7 @@ class CLIController(Controller):
                 print("Goodbye!")
                 break
             response = self.process_user_input(user_input)
-            self.view.display_response(response)
+            self.view.display_response_and_sources(response)
 
 
 if __name__ == "__main__":

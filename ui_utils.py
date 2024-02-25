@@ -8,15 +8,11 @@ from llama_index.schema import MetadataMode, NodeWithScore
 
 # UI constants
 
-welcome_messages = [
-    ("Welcome aboard our AI-driven magic carpet! Journey through the fascinating depths"
-     " of minds from Lex Fridman Podcast [(link)](https://lexfridman.com/podcast)."),
-]
 example_questions = [
     "What is the meaning of life and everything?",
     "Is intelligence a gift in personal happiness?",
     "What inspired developing GAN in deep learning?",
-    "Is there potential of AI in medicine, like cancer?",
+    "Is there potential for AI in medicine like cancer?",
 ]
 
 MAX_MESSAGE_LENGTH = 1000
@@ -34,7 +30,7 @@ class View(ABC):
         pass
     
     @abstractmethod
-    def display_response(self, response):
+    def display_response_and_sources(self, response):
         pass
 
 
@@ -123,8 +119,7 @@ def nodes_to_sorted_dataframe(
         )
     df = pd.DataFrame(sources_df_list)
     df['timestamp'] = df['timestamp'].apply(parse_timestamp)
-    df['top_relevance'] = df.groupby("episode_number")['score'].transform('max')
-    df = df.sort_values(['top_relevance', 'timestamp'], ascending=[False, True])
+    df['episode_top_relevance'] = df.groupby("episode_number")['score'].transform('max')
+    df = df.sort_values(['episode_top_relevance', 'timestamp'], ascending=[False, True])
     df["timestamp"] = df["timestamp"].apply(lambda x: x.strftime("%H:%M:%S"))
-    df = df.drop(columns=['top_relevance'])
     return df
