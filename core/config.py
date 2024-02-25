@@ -1,12 +1,23 @@
 import os
 
 DIR = "/Users/qasem/PycharmProjects/lexitalk/"
+# take the parent directory of the project
+# DIR = os.path.dirname(DIR)
+
+
+# Embedding parameters
 
 EMBEDDING_FILENAME_TXT = os.path.join(DIR, "../hash-node-to-embedding-model-openai-3-small.txt")
 EMBEDDING_MODEL_NAME = "text-embedding-3-small"     # OpenAI's embedding model
 
-NUM_RETRIEVED_DOCS = 20
-NUM_DOCUMENTS_TO_LLM = 8
+
+# Search parameters
+
+NUM_RETRIEVED_DOCS = 25
+NUM_DOCUMENTS_TO_LLM = 10
+
+
+# LLM parameters
 
 LLM_MODEL_NAME = "gpt-3.5-turbo"
 LLM_TEMPERATURE = 0.2
