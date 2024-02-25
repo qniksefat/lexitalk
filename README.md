@@ -15,7 +15,9 @@ This chatbot searches through thousands of hours of talks with brilliant minds. 
 
 You can quickly start using the chatbot by visiting the [lexchat.streamlit.app](https://lexchat.streamlit.app) website. The chatbot will be available for interaction, and you can ask your questions.
 
-<img src="data/video-screen.gif" width="85%" alt="Video Screen of the App">
+<p align="center">
+  <img src="data/video-screen.gif" width="85%" alt="Video Screen of the App">
+</p>
 
 ## Usage
 
@@ -60,7 +62,7 @@ The project relies on a variety of external libraries and APIs to implement its 
 ## Data
 
 ### Raw Transcripts
-Please note that videos #84 and #100 are no longer available. The transcripts were provided in [Lexicap](https://karpathy.ai/lexicap/) by Andrej Karpathy using Whisper.
+Please note that episdoes are not up to date containing up to episode #325 excluding episodes #84 and #100. The transcripts are available in the `data/raw/all` directory. The transcripts were provided in [Lexicap](https://karpathy.ai/lexicap/) by Andrej Karpathy using Whisper.
 
 ### Metadata
 
@@ -75,12 +77,12 @@ The vector store index is built in MongoDB Atlas with the following schema:
     "fields": [
       {
         "numDimensions": 1536,
-        "path": "embedding",        // the field that contains the vector array
+        "path": "embedding",
         "similarity": "cosine",
         "type": "vector"
       },
       {
-        "path": "metadata.views",            // if you want to filter by other fields
+        "path": "metadata.views",
         "type": "filter"
       }
     ]
