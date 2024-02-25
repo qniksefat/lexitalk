@@ -1,10 +1,10 @@
-# LexiChat
+# LexChat
 
 <p align="center">
   <img src="data/lexitalk-logo.png" alt="Logo" align="middle" width="30%">
 </p>
 
-LexiChat is a chatbot designed to guide you through discussions and analyze various perspectives from conversation transcripts of the [Lex Fridman Podcast](https://lexfridman.com/podcast). It shows the moments where a topic is discussed and helps you watch it from that time stamp. The chatbot aims to provide balanced responses by considering all sides of an argument. The project is built using Python and integrates with Streamlit for the web interface, Weaviate for vector search, and OpenAI for natural language processing.
+LexChat is a chatbot designed to guide you through discussions and analyze various perspectives from conversation transcripts of the [Lex Fridman Podcast](https://lexfridman.com/podcast). It shows the moments where a topic is discussed and helps you watch it from that time stamp. The chatbot aims to provide balanced responses by considering all sides of an argument. The project is built using Python and integrates with Streamlit for the web interface, Weaviate for vector search, and OpenAI for natural language processing.
 
 ## Motivation
 I usually find myself diving deep (a true DFS) into the internet, trying to research on my questions. But, the noise is louder than the signal drowning out the nuggets of wisdom that I seek. Finding the high-influential individuals or profound books on a particular subject feels like hunting for a golden needle in a haystack.
@@ -13,7 +13,7 @@ This chatbot searches through thousands of hours of talks with brilliant minds. 
 
 ## Quick Start
 
-You can quickly start using the chatbot by visiting the [lexchat.streamlit.app](https://lexichat.streamlit.app) website. The chatbot will be available for interaction, and you can ask your questions.
+You can quickly start using the chatbot by visiting the [lexchat.streamlit.app](https://lexchat.streamlit.app) website. The chatbot will be available for interaction, and you can ask your questions.
 
 <img src="data/video-screen.gif" width="85%" alt="Video Screen of the App">
 
