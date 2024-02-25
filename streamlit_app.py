@@ -83,7 +83,7 @@ class StreamlitView(View):
     def _st_display_question_buttons():
         left_col, mid_col, _ = st.columns([1, 4, 1])
         left_col.write("\n")
-        left_col.markdown("**Example Questions:**")
+        left_col.markdown("**Sample Questions:**")
         cols = mid_col.columns(len(example_questions))
         for i, question in enumerate(example_questions):
             with cols[i]:
@@ -91,17 +91,20 @@ class StreamlitView(View):
                     st.session_state.messages.append({"role": "user", "content": question})
     
     
-    def _st_display_response(self, response, streaming=True):
+    def _st_display_response(self, response, streaming=True, show_extra_info=False):
         self._display_generated_response(response, streaming)
 
-        if response.source_nodes:
-            st.write("\n")
-            st.info(("Click on the links if video is disabled to show outside of"
-                        " YouTube, or it doesn't play from the right time."), icon="🎥")
-            df_sources = nodes_to_sorted_dataframe(response.source_nodes)
-            self._display_source_videos(df_sources, streaming)
-            
-            with st.expander("Sources 📚", expanded=False):
+        if not response.source_nodes:
+            st.exception("Sorry, I couldn't find any discussion about this topic.")
+            return
+        
+        df_sources = nodes_to_sorted_dataframe(response.source_nodes)
+        self._display_source_videos(df_sources, streaming)
+        st.toast("Click on videos to play them right from the moment of discussion!",
+                    icon="🎥")
+        
+        if show_extra_info:
+            with st.expander("**Extra Info** 📚", expanded=False):
                 df_sources = df_sources.drop(columns=["url", "episode_top_relevance"])
                 st.dataframe(df_sources)
         
@@ -109,10 +112,12 @@ class StreamlitView(View):
 
 
     def _display_generated_response(self, response, streaming):
+
+        response_container = st.container(border=True)
         if streaming:
-            st.write_stream(response.response_gen)
+            response_container.write_stream(response.response_gen)
         else:
-            st.write(response.response)
+            response_container.write(response.response)
         
         message = {"role": "assistant", "content": response.response}
         st.session_state.messages.append(message)
@@ -122,36 +127,43 @@ class StreamlitView(View):
         ratio_columns = [2, 1]
         
         # we keep the top relevance of each episode
-        df_grouped = df_sources.groupby(['episode_top_relevance', 'episode_number'])
+        df_episode_groups = df_sources.groupby(['episode_top_relevance', 'episode_number'])
         # we want to iterate over episodes in the order of the top_relevance
-        df_grouped = sorted(df_grouped, key=lambda x: x[0][0], reverse=True)
+        df_episode_groups = sorted(df_episode_groups, key=lambda x: x[0][0], reverse=True)
 
-        for (episdoepisode_top_relevance, episode_number), episode_group in df_grouped:
-            if streaming:
-                time.sleep(0.5)
-            st.write("\n")
-            
-            col_text, col_video = st.columns(ratio_columns)
-            
-            # Display episode information
-            first_source_node = episode_group.iloc[0]
-            guest_names = first_source_node["guest_names"]
-            episode_title = first_source_node["episode_title"]
-            col_text.markdown(f"#### {guest_names} | {episode_title}")
-            
-            # Display the video for the first node
-            self._display_one_source_node(first_source_node, col_text, col_video, show_video=True, show_url=True)
-            
-            prev_timestamp = convert_timestamp_seconds(first_source_node["timestamp"])
-            
-            # Iterate over the rest of the nodes in the episode group
-            for _, source_node in episode_group.iloc[1:].iterrows():
-                timestamp = convert_timestamp_seconds(source_node["timestamp"])
-                show_url = (timestamp - prev_timestamp) > 120
-                prev_timestamp = timestamp
+        videos_container = st.container(border=True)
+        with videos_container:
+            episode_guests_names = [
+                f"**{group['guest_names'].iloc[0]}**"
+                for (_, _), group in df_episode_groups
+            ]
+            tabs = st.tabs(episode_guests_names)
+        
+        for index, ((relevance, episode_number), episode_group) in enumerate(df_episode_groups):
+            tab = tabs[index]
+            with tab:
+                st.write("\n")
+                col_text, col_video = st.columns(ratio_columns)
                 
-                self._display_one_source_node(source_node, col_text, col_video,
-                                              show_video=False, show_url=show_url)
+                # Display episode information
+                first_source_node = episode_group.iloc[0]
+                guest_names = first_source_node["guest_names"]
+                episode_title = first_source_node["episode_title"]
+                col_text.markdown(f"##### {guest_names} | {episode_title}")
+                
+                # Display the video for the first node
+                self._display_one_source_node(first_source_node, col_text, col_video, show_video=True, show_url=True)
+                
+                prev_timestamp = convert_timestamp_seconds(first_source_node["timestamp"])
+                
+                # Iterate over the rest of the nodes in the episode group
+                for _, source_node in episode_group.iloc[1:].iterrows():
+                    timestamp = convert_timestamp_seconds(source_node["timestamp"])
+                    show_url = (timestamp - prev_timestamp) > 120
+                    prev_timestamp = timestamp
+                    
+                    self._display_one_source_node(source_node, col_text, col_video,
+                                                show_video=False, show_url=show_url)
 
 
     @staticmethod
@@ -165,12 +177,11 @@ class StreamlitView(View):
         
         # If the timestamp is not at the start or at the first minute, remove leading "0:"
         timestamp_str_striped = timestamp_str.lstrip("0:") if timestamp_str not in ["00:00:00", "00:00"] else "00:00"
-            
+        
         episode_with_timestamp = f"E{episode_number} at {timestamp_str_striped}"
         
         url = source_node["url"]
-        url_timed = f"{url}&t={str(convert_timestamp_seconds(timestamp_str))}"
-        
+        url_timed = f"{url}&t={str(convert_timestamp_seconds(timestamp_str))}"        
 
         if show_url:
             col_text.markdown(f"**[{episode_with_timestamp}]({url_timed})**")            
@@ -179,8 +190,8 @@ class StreamlitView(View):
         col_text.write(text)
         
         if show_video:
-            col_video.write("\n")
-            col_video.video(url_timed)    
+            col_video.video(url_timed, 
+                            start_time=convert_timestamp_seconds(timestamp_str))
     
 
 class StreamlitController(Controller):
@@ -196,11 +207,10 @@ class StreamlitController(Controller):
 
         if st.session_state.messages[-1]["role"] != "assistant":
             with st.chat_message("assistant"):
-                with st.spinner(" 🔍 🤖 Searching and Thinking..."):
-                        
+                with st.spinner("Thinking..."):
                     user_input = st.session_state.messages[-1]["content"]
                     response = self.process_user_input(user_input)
-                    self.view.display_response_and_sources(response)
+                self.view.display_response_and_sources(response)
         
     def init_chat_engine(self):
         if "chat_engine" not in st.session_state.keys():
