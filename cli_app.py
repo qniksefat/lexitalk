@@ -1,7 +1,7 @@
 from ui_utils import (
     View, 
     Controller,
-    example_questions,
+    SAMPLE_QUESTIONS,
 )
 
 from core import build_chat_engine
@@ -23,9 +23,12 @@ class CLIView(View):
         print("\nHelp Guide:")
         print("Type your question directly and press Enter.")
         print("Example questions you can ask:")
-        for question in example_questions:
+        for question in self.get_sample_questions(4):
             print(f"- {question}")
         print("Type 'exit' to quit the application.\n")
+        
+    def get_sample_questions(self, n):
+        return SAMPLE_QUESTIONS[:n]
 
 
 class CLIController(Controller):
