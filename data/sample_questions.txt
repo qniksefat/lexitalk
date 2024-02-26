@@ -1,6 +1,6 @@
 How has linear algebra shaped the teaching of mathematics today? ✏️➗  
 Did MIT OpenCourseWare impacted on global education? 📚🌍
-Language's role in shaping human cognition according to Chomsky? 💬🧠 
+Language's role in shaping human cognition? 💬🧠 
 Deep learning uncover language's mysteries from Chomsky's perspective? 🔍💡   
 How do Ray Dalio's principles apply in AI development? 📚🤖  
 Can economic models help predict AI's societal impact? 📉🔮 
@@ -93,8 +93,7 @@ How has AI's modern approach shifted over decades? 💾⏳
 Biggest misconception about artificial intelligence today? 🧠 
 Why blend deep learning with symbolic AI? 🧩💡  
 Future of AI: More than just neural networks? ⚙️🤔 
-Lessons from IBM Watson's Jeopardy victory for AI's future? 🏆💭  
-'Conversations' with AI: Close to human-level understanding yet? 👤🤖 
+Lessons from IBM Watson's Jeopardy victory for AI's future? 🏆💭
 Human-alien contact: How would it change society? 👽🌐  
 Next big leap in space exploration tech: What and when? 🚀⌛  
 How did chess losses to AI impact human confidence? ♟️🤖  
@@ -122,7 +121,7 @@ What makes Vsauce approach to science education unique? 🤔📚
 How does Vsauce balance entertainment and educational content? 🎭🧠 
 What hurdles exist for flying cars' mass adoption? 🚗✈
 How might autonomous vehicles transform our education system? 🚙📘  
-In Sebastian Thrun’s view, is UBI inevitable due to automation? 💸🤖 
+Is UBI inevitable due to automation? 💸🤖 
 Could supersymmetry be the key to new physics discoveries? 🔐🌌  
 What barriers must we overcome to prove Einstein wrong - or right? 🕰️💡 
 How crucial are analogies for AI's understanding of common sense? 🖥️
@@ -137,7 +136,6 @@ Does quantum mechanics challenge the concept of determinism? 🔮⚛
 In physics, can randomness and predictability coexist harmoniously? 🎲
 Why do humans find beauty in numerical patterns? 📐❤️  
 What is the most beautiful phenomena in mathematics? 💝📐
-Why Gauss is called prince of mathematics? 📐👑
 Can visual content change attitudes towards math learning? 👀📚 
 Can deep learning benefit from understanding human cognition? 🤖🧠   
 How do ethics shape robot design choices? 🤖🚦  
@@ -249,7 +247,8 @@ Can Coinbase navigate future cryptocurrency government regulations? 💼🔗
 Would either Bitcoin or Ethereum take over? 💫💰 
 Did UFO encounters impact pilot aircraft operations? 👽🛸✈️
 Do governments disclose alien information? 👽📂 
-Does Spacex contributes to conquering Mars? 🚀💭
+Does Spacex contribute to conquering Mars? 🚀💭
+Are there similarities between running Spacex and Tesla? 🚀🚗🤖
 Is AGI achievable through current video game development lenses? 👾🤯  
 How has the evolution of programming influenced game design? 💻➡️🎮 
 What realities of espionage have movies accurately depicted? 🎥🕵️‍♂️  
