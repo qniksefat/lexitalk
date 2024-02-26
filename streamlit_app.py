@@ -1,9 +1,9 @@
 import streamlit as st
+import random
 
 # To stream the responses in Streamlit, we need to use nest_asyncio
 import nest_asyncio
 nest_asyncio.apply()
-import time
 
 from core import build_chat_engine
 
@@ -12,7 +12,7 @@ from ui_utils import (
     Controller,
     convert_timestamp_seconds, 
     nodes_to_sorted_dataframe,
-    example_questions,
+    SAMPLE_QUESTIONS,
 )
 
 
@@ -42,16 +42,22 @@ class StreamlitView(View):
 
     @staticmethod
     def _st_page_config():
+        
+        email_address = "qniksefat@gmail.com"
+        url_help = f"mailto:{email_address}?subject=Help with LexChat&body=Hi, I need help with LexChat."
+        about = (
+            "This a chatbot that has been trained on the transcripts of the Lex Fridman Podcast. Made with ❤️ by"
+            " Qasem Niksefat. If you enjoy it, hit the ⭐️ on [GitHub](https://qniksefat.github.io/)!"
+        )
+        open_issue = "https://github.com/qniksefat/lexitalk/issues/new"
+        
         st.set_page_config(
             page_title="LexChat 💬",
             page_icon="🎙️",
             layout="wide",
             initial_sidebar_state="auto",
-            menu_items={
-                "About": "This is a Streamlit app for conversing with Lex Fridman's guests.",
-                "Report a bug": "https://github.com/qniksefat/lexitalk/issues/new",
-                "Get help": "https://github.com/qniksefat/lexitalk/",
-            }
+            menu_items={"About": about, "Get help": url_help,
+                        "Report a bug": open_issue}
         )
         
     @staticmethod
@@ -80,16 +86,31 @@ class StreamlitView(View):
                         icon="🔄")
     
     @staticmethod
-    def _st_display_question_buttons():
-        left_col, mid_col, _ = st.columns([1, 4, 1])
-        left_col.write("\n")
-        left_col.markdown("**Sample Questions:**")
-        cols = mid_col.columns(len(example_questions))
-        for i, question in enumerate(example_questions):
-            with cols[i]:
-                if st.button(question):
-                    st.session_state.messages.append({"role": "user", "content": question})
-    
+    def _st_display_question_buttons(num_questions=5):
+        
+        if "current_questions" not in st.session_state.keys():
+            st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
+
+        # callback function to change the list of questions
+        def change_number():
+            st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
+            return
+        
+        questions_container = st.container(border=False, height=195)
+        with questions_container:
+
+            left_col, mid_col, _ = st.columns([2, 9, 2])
+            
+            left_col.write("\n")
+            left_col.write("\n")
+            left_col.button("**Refresh Questions** 🔄", on_click=change_number)
+            
+            cols = mid_col.columns(num_questions)
+            for i, question in enumerate(st.session_state["current_questions"]):
+                with cols[i]:
+                    if st.button(question):
+                        question = question.split("?")[0] + "?"     # remove emojis after '?'
+                        st.session_state.messages.append({"role": "user", "content": question})
     
     def _st_display_response(self, response, streaming=True, show_extra_info=False):
         self._display_generated_response(response, streaming)
