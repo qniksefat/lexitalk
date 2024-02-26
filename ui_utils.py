@@ -8,12 +8,12 @@ from llama_index.schema import MetadataMode, NodeWithScore
 
 # UI constants
 
-example_questions = [
-    "What is the meaning of life and everything?",
-    "Is intelligence a gift in personal happiness?",
-    "What inspired developing GAN in deep learning?",
-    "Is there potential for AI in medicine like cancer?",
-]
+filename_sample_questions = "data/sample_questions.txt"
+
+with open(filename_sample_questions, "r") as file:
+    SAMPLE_QUESTIONS = file.readlines()
+    SAMPLE_QUESTIONS = [question.strip() for question in SAMPLE_QUESTIONS]
+    
 
 MAX_MESSAGE_LENGTH = 1000
 
