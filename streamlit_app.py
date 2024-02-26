@@ -19,6 +19,11 @@ from ui_utils import (
 class StreamlitView(View):
     def init_view(self):
         self._st_page_config()
+        
+        self.init_chat_messages()
+        self.init_user_interacted()
+        self.init_current_sample_questions()
+        
         st.title("Chat with Lex Fridman's Guests 💬")
         st.write("\n")
         self._st_display_welcome()
@@ -26,10 +31,9 @@ class StreamlitView(View):
 
     def input_user_question(self):
         self._st_display_question_buttons()        
-        prompt = st.chat_input("Write your question here")
-        if prompt:
-            st.session_state.messages.append(
-                {"role": "user", "content": prompt})
+        st.chat_input("Write your question here",
+                      on_submit=self._input_question_written,
+                      key="current_question")
 
     def display_chat_messages(self, messages):
         for message in messages:
@@ -42,6 +46,35 @@ class StreamlitView(View):
     def _refresh_questions_callback(self, num_questions=5):
         st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
         return
+    
+    def _input_question_selected(self, question):
+        st.session_state["user_interacted"] = True
+        question = question.split("?")[0] + "?"     # remove trailing emojis
+        st.session_state.messages.append({"role": "user", "content": question})
+        return
+
+    def _input_question_written(self):
+        st.session_state["user_interacted"] = True
+        question = st.session_state.current_question
+        st.session_state.messages.append({"role": "user", "content": question})
+        return
+    
+    @staticmethod
+    def init_user_interacted():
+        if "user_interacted" not in st.session_state.keys():
+            st.session_state.user_interacted = False
+    
+    @staticmethod
+    def init_current_sample_questions():
+        if "current_questions" not in st.session_state.keys():
+            st.session_state.current_questions = random.sample(SAMPLE_QUESTIONS, 5)
+    
+    @staticmethod
+    def init_chat_messages():
+        if "messages" not in st.session_state.keys():
+            st.session_state.messages = [
+                {"role": "assistant", "content": "Hello! Ask me anything."}]
+
 
     @staticmethod
     def _st_page_config():
@@ -90,6 +123,9 @@ class StreamlitView(View):
     
     def _st_display_question_buttons(self, num_questions=5):
         
+        if st.session_state.user_interacted:
+            return
+        
         if "current_questions" not in st.session_state.keys():
             st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
         
@@ -106,9 +142,9 @@ class StreamlitView(View):
             cols = mid_col.columns(num_questions)
             for i, question in enumerate(st.session_state["current_questions"]):
                 with cols[i]:
-                    if st.button(question):
-                        question = question.split("?")[0] + "?"     # remove emojis after '?'
-                        st.session_state.messages.append({"role": "user", "content": question})
+                    if st.button(question, on_click=self._input_question_selected, args=(question,)):
+                        return
+                        
     
     def _st_display_response(self, response, streaming=True, show_extra_info=False):
         self._display_generated_response(response, streaming)
@@ -217,7 +253,6 @@ class StreamlitController(Controller):
     def __init__(self, view: StreamlitView, chat_engine):
         super().__init__(view, chat_engine)
         self.init_chat_engine()
-        self.init_chat_messages()
 
     def run(self):
         self.view.init_view()
@@ -230,18 +265,13 @@ class StreamlitController(Controller):
                     user_input = st.session_state.messages[-1]["content"]
                     response = self.process_user_input(user_input)
                 self.view.display_response_and_sources(response)
-        
+    
     def init_chat_engine(self):
         if "chat_engine" not in st.session_state.keys():
             st.session_state.chat_engine = self.chat_engine
         
     def get_chat_engine(self):
         return st.session_state.chat_engine
-    
-    def init_chat_messages(self):
-        if "messages" not in st.session_state.keys():
-            st.session_state.messages = [
-                {"role": "assistant", "content": "Hello! Ask me anything."}]
 
 
 if __name__ == "__main__":
