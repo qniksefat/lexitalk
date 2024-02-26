@@ -25,8 +25,8 @@ class StreamlitView(View):
         st.write("\n")
 
     def input_user_question(self):
-        self._st_display_question_buttons()
-        prompt = st.chat_input("Your question")
+        self._st_display_question_buttons()        
+        prompt = st.chat_input("Write your question here")
         if prompt:
             st.session_state.messages.append(
                 {"role": "user", "content": prompt})
@@ -38,7 +38,10 @@ class StreamlitView(View):
 
     def display_response_and_sources(self, response):
         self._st_display_response(response)
-
+        
+    def _refresh_questions_callback(self, num_questions=5):
+        st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
+        return
 
     @staticmethod
     def _st_page_config():
@@ -47,8 +50,7 @@ class StreamlitView(View):
         url_help = f"mailto:{email_address}?subject=Help with LexChat&body=Hi, I need help with LexChat."
         about = (
             "This a chatbot that has been trained on the transcripts of the Lex Fridman Podcast. Made with ❤️ by"
-            " Qasem Niksefat. If you enjoy it, hit the ⭐️ on [GitHub](https://qniksefat.github.io/)!"
-        )
+            " Qasem Niksefat. If you enjoy it, hit the ⭐️ on [GitHub](https://github.com/qniksefat/lexitalk)!")
         open_issue = "https://github.com/qniksefat/lexitalk/issues/new"
         
         st.set_page_config(
@@ -85,16 +87,11 @@ class StreamlitView(View):
             st.error("Similar to ChatGPT, it gets confused if the topic is changed. Consider refreshing the page.",
                         icon="🔄")
     
-    @staticmethod
-    def _st_display_question_buttons(num_questions=5):
+    
+    def _st_display_question_buttons(self, num_questions=5):
         
         if "current_questions" not in st.session_state.keys():
             st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
-
-        # callback function to change the list of questions
-        def change_number():
-            st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
-            return
         
         questions_container = st.container(border=False, height=195)
         with questions_container:
@@ -102,8 +99,9 @@ class StreamlitView(View):
             left_col, mid_col, _ = st.columns([2, 9, 2])
             
             left_col.write("\n")
-            left_col.write("\n")
-            left_col.button("**Refresh Questions** 🔄", on_click=change_number)
+            left_col.button("**Refresh Questions 🔄**", on_click=self._refresh_questions_callback)
+            left_col.markdown("<p style='text-align: center; font-size: 1em; font-weight: bold;'>"
+                            "Or ask your own 👇</p>", unsafe_allow_html=True)
             
             cols = mid_col.columns(num_questions)
             for i, question in enumerate(st.session_state["current_questions"]):
