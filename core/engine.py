@@ -17,7 +17,7 @@ from core.config import (
 )
 
 
-def build_chat_engine():
+def build_chat_engine(use_rerank: bool = False):
     
     mongodb_client = MongoDBClient()
     vector_store = MongoDBAtlasVectorSearch(mongodb_client=mongodb_client.client, 
@@ -44,9 +44,16 @@ def build_chat_engine():
     reranker = CohereRerank(api_key=st.secrets["cohere_key"], 
                                  top_n=NUM_DOCUMENTS_TO_LLM)
     
+
+    node_postprocessors = []
+    if use_rerank:
+        reranker = CohereRerank(api_key=st.secrets["cohere_key"], 
+                                    top_n=NUM_DOCUMENTS_TO_LLM)
+        node_postprocessors.append(reranker)
+
     chat_engine = index.as_chat_engine(
         similarity_top_k=NUM_RETRIEVED_DOCS,
-        node_postprocessors=[reranker],
+        node_postprocessors=node_postprocessors,
         chat_mode="condense_question",
         verbose=True,
     )
