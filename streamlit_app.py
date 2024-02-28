@@ -136,7 +136,8 @@ class StreamlitView(View):
             
             left_col.write("\n")
             left_col.button("**Refresh Questions 🔄**", on_click=self._refresh_questions_callback)
-            left_col.markdown("<p style='text-align: center; font-size: 1em; font-weight: bold;'>"
+            left_col.markdown("<p style='font-size: 1em; font-weight: bold;'>"
+                            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                             "Or ask your own 👇</p>", unsafe_allow_html=True)
             
             cols = mid_col.columns(num_questions)
@@ -186,7 +187,7 @@ class StreamlitView(View):
         # we want to iterate over episodes in the order of the top_relevance
         df_episode_groups = sorted(df_episode_groups, key=lambda x: x[0][0], reverse=True)
 
-        videos_container = st.container(border=True)
+        videos_container = st.container(border=True, height=500)
         with videos_container:
             episode_guests_names = [
                 f"**{group['guest_names'].iloc[0]}**"
