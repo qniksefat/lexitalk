@@ -1,5 +1,8 @@
 import streamlit as st
+from streamlit.logger import get_logger
 import random
+
+LOGGER = get_logger(__name__)
 
 # To stream the responses in Streamlit, we need to use nest_asyncio
 import nest_asyncio
@@ -22,6 +25,8 @@ class StreamlitView(View):
         
         self.init_chat_messages()
         self.init_user_interacted()
+        if not st.session_state.user_interacted:
+            LOGGER.info("Initializing...")
         self.init_current_sample_questions()
         
         st.title("Chat with Lex Fridman's Guests 💬")
@@ -44,6 +49,7 @@ class StreamlitView(View):
         self._st_display_response(response)
         
     def _refresh_questions_callback(self, num_questions=5):
+        LOGGER.info("User has refreshed the questions.")
         st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
         return
     
@@ -51,12 +57,15 @@ class StreamlitView(View):
         st.session_state["user_interacted"] = True
         question = question.split("?")[0] + "?"     # remove trailing emojis
         st.session_state.messages.append({"role": "user", "content": question})
+        LOGGER.info(f"User has selected the question: {question}")
         return
 
     def _input_question_written(self):
         st.session_state["user_interacted"] = True
         question = st.session_state.current_question
         st.session_state.messages.append({"role": "user", "content": question})
+        question = question.replace("\n", "\t")
+        LOGGER.info(f"User has written a question: {st.session_state.current_question}")
         return
     
     @staticmethod
@@ -148,6 +157,7 @@ class StreamlitView(View):
                         
     
     def _st_display_response(self, response, streaming=True, show_extra_info=False):
+        LOGGER.info("Streaming the response...")
         self._display_generated_response(response, streaming)
 
         if not response.source_nodes:
@@ -158,6 +168,10 @@ class StreamlitView(View):
         self._display_source_videos(df_sources, streaming)
         st.toast("Click on videos to play them right from the moment of discussion!",
                     icon="🎥")
+        sources_str = [f"E{row[1]} at {row[4]} score {row[0]:.3f}"
+                       for row in df_sources.values]
+        sources_str = ", ".join(sources_str)
+        LOGGER.info(f"Sources: {sources_str}")
         
         if show_extra_info:
             with st.expander("**Extra Info** 📚", expanded=False):
@@ -172,6 +186,9 @@ class StreamlitView(View):
         response_container = st.container(border=True)
         if streaming:
             response_container.write_stream(response.response_gen)
+            response_one_line = response.response.replace("\n", " ")
+            LOGGER.info(f"Generated response length: {len(response_one_line)}")
+            LOGGER.info(f"Generated response: {response_one_line[:1000]+'...'}")
         else:
             response_container.write(response.response)
         
@@ -263,6 +280,7 @@ class StreamlitController(Controller):
         if st.session_state.messages[-1]["role"] != "assistant":
             with st.chat_message("assistant"):
                 with st.spinner("Thinking..."):
+                    LOGGER.info("Processing user input...")
                     user_input = st.session_state.messages[-1]["content"]
                     response = self.process_user_input(user_input)
                 self.view.display_response_and_sources(response)
@@ -277,6 +295,6 @@ class StreamlitController(Controller):
 
 if __name__ == "__main__":
     view = StreamlitView()
-    chat_engine = build_chat_engine()
+    chat_engine = build_chat_engine(rerank="SentenceTransformer")
     controller = StreamlitController(view, chat_engine)
     controller.run()
