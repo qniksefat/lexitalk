@@ -14,6 +14,15 @@ with open(filename_sample_questions, "r") as file:
     SAMPLE_QUESTIONS = file.readlines()
     SAMPLE_QUESTIONS = [question.strip() for question in SAMPLE_QUESTIONS]
     
+ascii_art_welcome = """
+  _                  _____ _           _     _ 
+ | |                / ____| |         | |   | |
+ | |     _____  __ | |    | |__   __ _| |_  | |
+ | |    / _ \ \/ / | |    | '_ \ / _` | __| | |
+ | |___|  __/>  <  | |____| | | | (_| | |_  |_|
+ |______\___/_/\_\  \_____|_| |_|\__,_|\__| (_)
+                                               
+"""
 
 MAX_MESSAGE_LENGTH = 1000
 
