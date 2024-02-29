@@ -4,7 +4,10 @@ from llama_index import ServiceContext, VectorStoreIndex
 from llama_index.vector_stores import MongoDBAtlasVectorSearch
 from llama_index.embeddings import OpenAIEmbedding
 from llama_index.llms import OpenAI
-from llama_index.postprocessor.cohere_rerank import CohereRerank
+from llama_index.postprocessor import (
+    SentenceTransformerRerank,
+    CohereRerank,
+)
 
 from core.database import MongoDBClient
 from core.embedding import EmbeddingManager
@@ -17,7 +20,7 @@ from core.config import (
 )
 
 
-def build_chat_engine(use_rerank: bool = False):
+def build_chat_engine(rerank=None):
     
     mongodb_client = MongoDBClient()
     vector_store = MongoDBAtlasVectorSearch(mongodb_client=mongodb_client.client, 
@@ -41,16 +44,22 @@ def build_chat_engine(use_rerank: bool = False):
     index = VectorStoreIndex.from_vector_store(vector_store=vector_store,
                                                service_context=service_context)
     
-    reranker = CohereRerank(api_key=st.secrets["cohere_key"], 
-                                 top_n=NUM_DOCUMENTS_TO_LLM)
-    
 
     node_postprocessors = []
-    if use_rerank:
+    if rerank is None:
+        pass
+    if rerank == "SentenceTransformer":
+        postprocessor = SentenceTransformerRerank(top_n=NUM_DOCUMENTS_TO_LLM)
+        node_postprocessors.append(postprocessor)
+    elif rerank == "Cohere":
         reranker = CohereRerank(api_key=st.secrets["cohere_key"], 
                                     top_n=NUM_DOCUMENTS_TO_LLM)
         node_postprocessors.append(reranker)
-
+    elif rerank is None:
+        pass
+    else:
+        raise ValueError("Invalid postprocessor")
+    
     chat_engine = index.as_chat_engine(
         similarity_top_k=NUM_RETRIEVED_DOCS,
         node_postprocessors=node_postprocessors,
