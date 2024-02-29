@@ -2,4 +2,5 @@ llama-index==0.9.34
 streamlit==1.31
 pymongo
 cohere
-torch sentence-transformers
+torch 
+sentence-transformers
