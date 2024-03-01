@@ -15,12 +15,12 @@ from ui_utils import (
     Controller,
     convert_timestamp_seconds, 
     nodes_to_sorted_dataframe,
-    SAMPLE_QUESTIONS,
+    all_sample_questions,
 )
 
 
 class StreamlitView(View):
-    def init_view(self):
+    def __init__(self):
         self._st_page_config()
         
         self.init_chat_messages()
@@ -50,7 +50,7 @@ class StreamlitView(View):
         
     def _refresh_questions_callback(self, num_questions=5):
         LOGGER.info("User has refreshed the questions.")
-        st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
+        st.session_state["current_questions"] = random.sample(all_sample_questions, num_questions)
         return
     
     def _input_question_selected(self, question):
@@ -76,7 +76,7 @@ class StreamlitView(View):
     @staticmethod
     def init_current_sample_questions():
         if "current_questions" not in st.session_state.keys():
-            st.session_state.current_questions = random.sample(SAMPLE_QUESTIONS, 5)
+            st.session_state.current_questions = random.sample(all_sample_questions, 5)
     
     @staticmethod
     def init_chat_messages():
@@ -136,7 +136,7 @@ class StreamlitView(View):
             return
         
         if "current_questions" not in st.session_state.keys():
-            st.session_state["current_questions"] = random.sample(SAMPLE_QUESTIONS, num_questions)
+            st.session_state["current_questions"] = random.sample(all_sample_questions, num_questions)
         
         questions_container = st.container(border=False, height=195)
         with questions_container:
@@ -273,7 +273,6 @@ class StreamlitController(Controller):
         self.init_chat_engine()
 
     def run(self):
-        self.view.init_view()
         self.view.input_user_question()
         self.view.display_chat_messages(st.session_state.messages)
 
@@ -292,9 +291,12 @@ class StreamlitController(Controller):
     def get_chat_engine(self):
         return st.session_state.chat_engine
 
+@st.cache_resource
+def load_or_create_chat_engine():
+    return build_chat_engine(rerank=None)
 
 if __name__ == "__main__":
     view = StreamlitView()
-    chat_engine = build_chat_engine(rerank="SentenceTransformer")
+    chat_engine = load_or_create_chat_engine()
     controller = StreamlitController(view, chat_engine)
     controller.run()
