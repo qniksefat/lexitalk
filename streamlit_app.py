@@ -292,11 +292,11 @@ class StreamlitController(Controller):
         return st.session_state.chat_engine
 
 @st.cache_resource
-def load_or_create_chat_engine():
-    return build_chat_engine(rerank=None)
+def load_or_create_chat_engine(**kwargs):
+    return build_chat_engine(**kwargs)
 
 if __name__ == "__main__":
     view = StreamlitView()
-    chat_engine = load_or_create_chat_engine()
+    chat_engine = load_or_create_chat_engine(rerank="None")
     controller = StreamlitController(view, chat_engine)
     controller.run()
