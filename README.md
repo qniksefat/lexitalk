@@ -16,10 +16,7 @@ This chatbot searches through thousands of hours of talks with brilliant minds. 
 You can quickly start using the chatbot by visiting the [lexchat.streamlit.app](https://lexchat.streamlit.app) website. The chatbot will be available for interaction, and you can ask your questions.
 
 <p align="center">
-  <video width="85%" controls>
-    <source src="https://drive.google.com/uc?export=download&id=1f_-_O5v--c2_SV-Gj3h-dZv4kkaAIZV3" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <img src="data/video-screen.gif" alt="Web Interface" align="middle" width="85%">
 </p>
 
 ## Usage
