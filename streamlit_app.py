@@ -188,7 +188,7 @@ class StreamlitView(View):
             response_container.write_stream(response.response_gen)
             response_one_line = response.response.replace("\n", " ")
             LOGGER.info(f"Generated response length: {len(response_one_line)}")
-            LOGGER.info(f"Generated response: {response_one_line[:1000]+'...'}")
+            LOGGER.info(f"Generated response: {response_one_line[:100]+'...'}")
         else:
             response_container.write(response.response)
         
