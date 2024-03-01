@@ -20,7 +20,7 @@ from core.config import (
 )
 
 
-def build_chat_engine(rerank=None):
+def build_chat_engine(**kwargs):
     
     mongodb_client = MongoDBClient()
     vector_store = MongoDBAtlasVectorSearch(mongodb_client=mongodb_client.client, 
@@ -44,24 +44,24 @@ def build_chat_engine(rerank=None):
     index = VectorStoreIndex.from_vector_store(vector_store=vector_store,
                                                service_context=service_context)
     
-
+    rerank = kwargs.get("rerank", "None")
     node_postprocessors = []
-    if rerank is None:
-        pass
+    assert rerank in ["None", "SentenceTransformer", "Cohere"], "Not supported rerank method"
+    
     if rerank == "SentenceTransformer":
-        postprocessor = SentenceTransformerRerank(top_n=NUM_DOCUMENTS_TO_LLM)
-        node_postprocessors.append(postprocessor)
+        node_postprocessors.append(
+            SentenceTransformerRerank(top_n=NUM_DOCUMENTS_TO_LLM))
     elif rerank == "Cohere":
-        reranker = CohereRerank(api_key=st.secrets["cohere_key"], 
-                                    top_n=NUM_DOCUMENTS_TO_LLM)
-        node_postprocessors.append(reranker)
-    elif rerank is None:
-        pass
-    else:
-        raise ValueError("Invalid postprocessor")
+        node_postprocessors.append(
+            CohereRerank(top_n=NUM_DOCUMENTS_TO_LLM,
+                         api_key=st.secrets["cohere_key"]))
+    
+    num_to_retrieve = (NUM_DOCUMENTS_TO_LLM
+                       if rerank == "None"
+                       else NUM_RETRIEVED_DOCS)
     
     chat_engine = index.as_chat_engine(
-        similarity_top_k=NUM_RETRIEVED_DOCS,
+        similarity_top_k=num_to_retrieve,
         node_postprocessors=node_postprocessors,
         chat_mode="condense_question",
         verbose=True,
