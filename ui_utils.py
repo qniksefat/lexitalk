@@ -11,8 +11,8 @@ from llama_index.schema import MetadataMode, NodeWithScore
 filename_sample_questions = "data/sample_questions.txt"
 
 with open(filename_sample_questions, "r") as file:
-    SAMPLE_QUESTIONS = file.readlines()
-    SAMPLE_QUESTIONS = [question.strip() for question in SAMPLE_QUESTIONS]
+    all_sample_questions = file.readlines()
+    all_sample_questions = [question.strip() for question in all_sample_questions]
     
 ascii_art_welcome = """
   _                  _____ _           _     _ 
@@ -30,10 +30,6 @@ MAX_MESSAGE_LENGTH = 1000
 # UI abstract classes
 
 class View(ABC):
-    @abstractmethod
-    def init_view(self):
-        pass
-    
     @abstractmethod
     def input_user_question(self):
         pass

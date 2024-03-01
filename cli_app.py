@@ -1,13 +1,16 @@
 from ui_utils import (
     View, 
     Controller,
-    SAMPLE_QUESTIONS,
+    all_sample_questions,
+    ascii_art_welcome,
 )
 
 from core import build_chat_engine
 
 class CLIView(View):
-    def init_view(self):
+    def __init__(self):
+        print("\033c", end="")
+        print(ascii_art_welcome)
         print("Chat with Lex Fridman's Guests!")
         print("Type 'exit' or 'quit' to end the conversation. Type 'help' for assistance.")
 
@@ -25,16 +28,15 @@ class CLIView(View):
         print("Example questions you can ask:")
         for question in self.get_sample_questions(4):
             print(f"- {question}")
-        print("Type 'exit' to quit the application.\n")
+        print("Type 'exit' or 'quit' to quit the application.\n")
         
     def get_sample_questions(self, n):
-        return SAMPLE_QUESTIONS[:n]
+        return all_sample_questions[:n]
 
 
 class CLIController(Controller):
     def run(self):
         self.chat_engine.reset()
-        self.view.init_view()
         
         while True:
             user_input = self.view.input_user_question()
