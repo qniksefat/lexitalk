@@ -1,7 +1,7 @@
 How has linear algebra shaped the teaching of mathematics today? ✏️➗  
 Did MIT OpenCourseWare impacted on global education? 📚🌍
 Language's role in shaping human cognition? 💬🧠 
-Deep learning uncover language's mysteries from Chomsky's perspective? 🔍💡   
+Deep learning uncover language's mysteries? 🔍💡   
 How do Ray Dalio's principles apply in AI development? 📚🤖  
 Can economic models help predict AI's societal impact? 📉🔮 
 Can dialogues on geopolitics reduce nuclear threats? 💬☢️
@@ -34,7 +34,7 @@ How did Google reshape global information access? 🌎🔍
 What are the ethical dilemmas of future AI? 🤖 
 How is Deep RL transforming technology applications? 🕹🧠 
 What innovations powered Godel Machines? 🔬🧠 
-How LSTMs work? 🧠💻
+Have transformers depricated Recurrent NNs? 🧠💻
 How did poker advance game theory and AI research? ♠️🧬 
 Brains, Minds, Machines: Bridging the gap? 🧠💻💭 
 What's the significance of Cruise Automation in self-driving cars? 🚗💡 
@@ -42,7 +42,7 @@ How do reinforcement learning, planning impact robotics advancements? 🤖💭
 Innovations science missed: What drives revolutionary ideas? 💡🎓 
 Path towards AGI: How does OpenAI's vision differ? ⟿⚙️ 
 Autopilot's role in Tesla's vision of the future? 🚘⌚ 
-GANs' transformational potential across industries-possible outcomes? 📉➡️📈  
+GAN's potential across industries-possible outcomes? 📉➡️📈  
 Future of mobility: For society or freedom? 🚗💡  
 How close are we truly to full automation? 🤖🚦 
 Impact of GANs beyond generating art? 🔮👾  
@@ -101,15 +101,15 @@ Kasparov vs Deep Blue: Key lessons for AI development? ✔️⚙️
 Explaining multiple universes: Can quantum mechanics unite theories? 🌌➕  
 Implications of Many-Worlds interpretation on our understanding of reality? 🔄🤔 
 C++ evolution: What's its pivotal role in modern software? 💻↔️  
-Stroustrup's view on programming education's future and C++'s place? 📘⌨️ 
+Programming education's future and C++'s place? 📘⌨️ 
 Neuralink's role in merging humans with artificial intelligence? 🧠🔌  
-Vision of AI driven future by Elon Musk: Utopia or not? 🌐😇 
+Vision of AI driven future: Utopia or not? 🌐😇 
 How can AI contribute towards ensuring algorithmic fairness? ⚖️💡  
 Privacy and ethics in AI: Unresolved issues or solutions in sight? 👁️🔐 
 Breakthroughs needed for sustainable life on Mars: What are the priorities? 🚀🏠  
 Future visions for space suits for Mars? 👩‍🚀🌕
 What is the ethical arc of life in AI perspective? 🌌🤔 
-How does neurology influence comedy writing for Whitney? 🧠😂  
+How does neurology influence comedy writing? 🧠😂  
 Can robotics advance to understand and simulate love? 🤖💔  
 What's the intersection of comedy and technology for Cummings? 🎤📱 
 How close are we to achieving AGI through causality? 🚀🧠  
@@ -198,7 +198,7 @@ What new institutions are needed in today's scientific landscape? 🏛️🌐
 Are cellular automata the key to deciphering the universe? 🔬🌌  
 How does computation merge with natural phenomena in physics? 💻⚛️ 
 What discoveries has computational biology made about Coronavirus? 🦠💡  
-AI contribute to future pandemic prevention? 🤖🔬⚕️  
+Can AI contribute to future pandemic prevention? 🤖🔬⚕️  
 How tech startups affect current financial ecosystem? 💳🌐  
 Can cryptocurrency become mainstream? 🤑⚖️  
 What role will AI play in the evolution of fintech? 🤖💳 
@@ -255,14 +255,14 @@ What realities of espionage have movies accurately depicted? 🎥🕵️‍♂�
 Secrets to remain unnoticed as a CIA spy? ☁️👁‍🗨 
 Can capitalism drive positive future developments in Africa? 🌍💰  
 Will Africa become the new China someday? 🌍💰  
-Magatte Wade's viewpoints on how communism impacted Africa? ⚖️🛤️ 
+How communism impacted Africa? ⚖️🛤️ 
 Will sentient robots ever understand love? ❤️🤖
 Does comedy play a role in alleviating human suffering? 😂💔 
 How does the quest for fame impact meaning in life? 🌟😵  
 Can power become a barrier to finding personal happiness? 💪😊
 What role does contemplating death play in understanding life? 💀🔍 
 How could game theory redefine existential risks and responses? 🎲🌍  
-Does Liv Boeree believe AI could simulate a universe? 🤖💫  
+Could AI simulate our universe? 🤖💫  
 Where do aliens fit in the existential risk paradigm? 👽🛸 
 Does chess mastery translate to skills outside of the game? ♟ 
 How does Chomsky contextualize Putin's actions in Ukraine? 🇷🇺🕊️🇺🇦      
@@ -296,15 +296,9 @@ What are key strategies for future financial planning? 🚀💼
 How to balance risk and security in financing for future? ⚖️💡 
 What fundamentals drive stock market fluctuations? 📈📉  
 How do traders decide on buying or selling in stock markets? 🤔💹  
-Did Islam propagate peace? ☪️🕊  
-Was Mohammad a champion of peace? 🕌💖 
 How have Iran and Byzantine influenced Islam? 🌍✨  
-Can Buddhism address today's global mental health crisis? 🌳🧘  
-How much of Buddha's teachings apply to modern dilemmas? 💡🧘
-How does Hinduism maintain diversity within its beliefs? 🕉
-What roles do rituals play in Hinduism's various forms? 🕉🔔 
-What core issues could spark another revolution in Iran? ⚖️💥  
-How did Singapore's model contribute to GDP growth? 🏙️💼🇸🇬 
+Can Buddhism address today's global mental health crisis? 🌳🧘 
+How did Singapore's model contribute to GDP growth? 🏙️🇸🇬 
 Does the rise of China impact global tech innovation? 🌏🔧  
 What factors led to the diversity in Iran's history? 📜🤔  
 How did Persian Empire influence modern day politics? 👑☮️  
@@ -313,7 +307,6 @@ How did Ottomans manage religious diversity? 🕌✨
 Could Vietnam War's outcome have been different with today's tech? 💣💻  
 How does power influence one's search for meaning? 💡⚖️
 Can game theory applications mitigate existential risks? 🎲🌍
-How did chess mold your perspective on strategy? ♟🧠
-Was Shah of Iran a benevolent dictator? 🤴🤨  
+How does chess mold perspective on strategy? ♟🧠
 What foundational principles made 'how US was made' successful? 🇺🇸⚖️  
 How to achieve brain-computer interfaces? 🧠💻
