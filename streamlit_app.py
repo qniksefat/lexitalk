@@ -183,7 +183,7 @@ class StreamlitView(View):
 
     def _display_generated_response(self, response, streaming):
 
-        response_container = st.container(border=True)
+        response_container = st.container(border=True, height=350)
         if streaming:
             response_container.write_stream(response.response_gen)
             response_one_line = response.response.replace("\n", " ")
